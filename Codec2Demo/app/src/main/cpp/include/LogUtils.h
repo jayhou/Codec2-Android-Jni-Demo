@@ -9,7 +9,7 @@
 #define LOG_TAG "CODEC2_JNI"
 #endif
 #ifndef IS_DEBUG
-#define IS_DEBUG true
+#define IS_DEBUG false
 #endif
 
 #define LOG_NOOP (void) 0

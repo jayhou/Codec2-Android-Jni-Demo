@@ -1,9 +1,9 @@
 #include <jni.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "LogUtils.h"
-#include "codec2.h"
-#include "codec2_internal.h"
+#include "include/LogUtils.h"
+#include "include/codec2.h"
+#include "include/codec2_internal.h"
 
 static short *buf;
 static unsigned char *bits;
@@ -91,8 +91,7 @@ Java_com_huami_watch_codec2_Codec2_codec2Encode(
         LOGE("encode error!!!");
         return NULL;
     }
-    LOGD("nsam :%d   nbit:%d   nbyte:%d  gray:%d   softdec:%d", nsam, nbit, nbyte, codec2->gray,
-         codec2->softdec);
+    LOGD("nsam :%d   nbit:%d   nbyte:%d  gray:%d", nsam, nbit, nbyte, codec2->gray);
     for (i = 0; i < nsam; i++) {
         LOGD("%d ", buf[i]);
     }
@@ -151,19 +150,14 @@ Java_com_huami_watch_codec2_Codec2_codec2Decode(
     if (buf == NULL) {
         LOGE("decode error!!!");
     }
-    int buf_len = sizeof(buf) / sizeof(buf[0]);
 
-    if (nbyte != buf_len) {
-        LOGE("error decode length:%d, expect:%d", buf_len, nbyte);
-        return NULL;
-    }
     jshortArray out_decode = NULL;
-    out_decode = env->NewShortArray(buf_len);
-    jshort *short_buf = (jshort *) malloc(buf_len * sizeof(jshort));
-    for (i = 0; i < buf_len; i++) {
+    out_decode = env->NewShortArray(nsam);
+    jshort *short_buf = (jshort *) malloc(nsam * sizeof(jshort));
+    for (i = 0; i < nsam; i++) {
         short_buf[i] = buf[i];
     }
-    env->SetShortArrayRegion(out_decode, 0, buf_len, short_buf);
+    env->SetShortArrayRegion(out_decode, 0, nsam, short_buf);
     env->ReleaseByteArrayElements(decode_data, jbyte_data, 0);
     free(short_buf);
     return out_decode;

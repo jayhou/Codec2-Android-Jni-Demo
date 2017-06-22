@@ -1,6 +1,5 @@
 package com.huami.watch.codec2demo;
 
-import android.content.res.AssetManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,7 +8,6 @@ import android.widget.TextView;
 import com.huami.watch.codec2.Codec2;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -30,10 +28,10 @@ public class MainActivity extends AppCompatActivity {
         int n = Codec2.getDecodeDataLen();
         int k = Codec2.getEncodeDataLen();
 
-        InputStream inputStream = getResources().openRawResource(R.raw.hts1a);
+        InputStream inputStream = getResources().openRawResource(R.raw.session);
 
         FileOutputStream outputStream;
-        File file = new File("/sdcard/hts.bit");
+        File file = new File("/sdcard/session_e2d.raw");
         if(!file.exists()) {
             try {
                 file.createNewFile();
@@ -55,12 +53,18 @@ public class MainActivity extends AppCompatActivity {
                 short[] encodeData =
                         MemoryUtils.toShortArray(buf,0,k*2);
                 encodedBits = Codec2.codec2Encode(encodeData,k);
+                short[] decodedData = Codec2.codec2Decode(encodedBits,Codec2.getDecodeDataLen());
+                byte[] decodedBytes = MemoryUtils.toByteArray(decodedData, decodedData.length);
                 if(encodedBits!=null) {
                     Log.d(TAG, "encode result lenght:" + encodedBits.length);
                 } else {
                     Log.w(TAG, "encode result is null!!!");
                 }
-                outputStream.write(encodedBits);
+                if(decodedData!=null) {
+                    Log.d(TAG,"decoded short array length:" + decodedData.length);
+                    Log.d(TAG,"decoded byte array length:" + decodedBytes.length);
+                }
+                outputStream.write(decodedBytes);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -72,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-//        Codec2.codec2Decode(new byte[n],n);
         Codec2.codec2Destroy();
     }
 }

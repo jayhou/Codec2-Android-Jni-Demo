@@ -4,27 +4,71 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 
-# Creates and names a library, sets it as either STATIC
-# or SHARED, and provides the relative paths to its source code.
-# You can define multiple libraries, and CMake builds it for you.
-# Gradle automatically packages shared libraries with your APK.
+set(CODEC2_SRCS
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/dump.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/lpc.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/nlp.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/postfilter.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/sine.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/codec2.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/codec2_fft.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/cohpsk.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/fifo.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/fdmdv.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/fm.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/fsk.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/fmfsk.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/kiss_fft.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/kiss_fftr.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/linreg.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/interp.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/lsp.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/mbest.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/newamp1.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/phase.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/quantise.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/pack.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/codebook.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/codebookd.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/codebookjvm.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/codebookmel.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/codebooklspmelvq.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/codebookge.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/codebooknewamp1.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/codebooknewamp1_energy.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/golay23.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/freedv_api.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/freedv_vhf_framing.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/freedv_data_channel.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/varicode.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/codec2_0_6/modem_stats.c
+)
 
 add_library( # Sets the name of the library.
              coded2-jni
 
-             # Sets the library as a shared library.
              SHARED
 
-             # Provides a relative path to your source file(s).
-             # Associated headers in the same location as their source
-             # file are automatically included.
-             src/main/cpp/codec2_jni.cpp )
+             src/main/cpp/codec2_jni.cpp ${CODEC2_SRCS})
 
-# Searches for a specified prebuilt library and stores the path as a
-# variable. Because system libraries are included in the search path by
-# default, you only need to specify the name of the public NDK library
-# you want to add. CMake verifies that the library exists before
-# completing its build.
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/include/)
+
+#add_library(codec2 SHARED IMPORTED)
+#set_target_properties(codec2
+#                       PROPERTIES IMPORTED_LOCATION
+#                       ${CMAKE_SOURCE_DIR}/libs/${ANDROID_ABI}/libcodec2.so)
+
+#
+# codec2 library sources
+#
+
+
+#
+# Setup the codec2 library
+#
+#Message(${CMAKE_CURRENT_SOURCE_DIR})
+#add_library(codec2 SHARED ${CODEC2_SRCS})
+#target_link_libraries(codec2 ${CMAKE_REQUIRED_LIBRARIES})
 
 find_library( # Sets the name of the path variable.
               log-lib
@@ -42,4 +86,4 @@ target_link_libraries( # Specifies the target library.
 
                        # Links the target library to the log library
                        # included in the NDK.
-                       ${log-lib} /home/jayhou/workspace/newHmDroid/vendor/huami/packages/Experimental/Codec2Demo/app/libs/libcodec2.so)
+                       ${log-lib})
